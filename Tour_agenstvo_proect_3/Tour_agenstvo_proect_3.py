@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from base import TourCreate
 
 
@@ -20,3 +20,15 @@ def create_tour(item: TourCreate):
     counter = counter + 1
     db[counter] = {"id": counter, **TourCreate.model_dump()}
     return db[counter]
+
+
+@app.get("/api/tours")
+def tours_list():
+    return list(db.values())
+
+
+@app.get("/api/tours/{id}")
+def get_tour(id: int):
+    if id not in db:
+        return HTTPException(status_code=404, detail="Tour not found")
+    return db[id]
