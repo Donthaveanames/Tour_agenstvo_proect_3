@@ -10,10 +10,11 @@ from typing import Optional
 
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 
 
 class TourCreate(BaseModel):
-    country: str
+    country: str = Field(min_length=1)
     date_in: date
     date_out: date
     places: int = Field(gt=0)
@@ -21,7 +22,7 @@ class TourCreate(BaseModel):
 
 
 class TourUpdate(BaseModel):
-    country: Optional[str] = None
+    country: Optional[str] = Field(default=None, min_length=1)
     date_in: Optional[date] = None
     date_out: Optional[date] = None
     places: Optional[int] = Field(default=None, gt=0)
@@ -89,4 +90,14 @@ def delete_tour(id: int):
 
 @app.exception_handler(RequestValidationError)
 async def validation_handler(request: Request, exc: RequestValidationError):
-    return JSONResponse(status_code=400, content={"detail": exc.errors()})
+    errors = jsonable_encoder(exc.errors())
+    first = errors[0] if errors else {}
+    loc = first.get("loc", [])
+    field = loc[-1] if len(loc) > 1 else "body"
+
+    if first.get("type") == "json_invalid":
+        field = "body"
+        message = "Malformed JSON"
+    else:
+        message = first.get("msg", "Validation error")
+    return JSONResponse(status_code=400, content={"error": message, "field": field})
