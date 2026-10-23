@@ -61,8 +61,35 @@ def create_tour(item: TourCreate):
 
 
 @app.get("/api/tours")
-def tours_list():
-    return list(db.values())
+def tours_list(request: Request):
+
+    params = dict(request.query_params)
+
+    try:
+        limit = int(params.pop("limit", 10))
+        offset = int(params.pop("offset", 0))
+    except ValueError:
+        raise HTTPException(status_code=400,
+                            detail={"error": "limit/offset must be integers",
+                                    "field": "limit/offset"})
+    if limit < 0 or offset < 0:
+        raise HTTPException(status_code=400,
+                            detail={"error": "limit/offset must be >= 0",
+                                    "field": "limit/offset"})
+
+    valid = set(TourCreate.model_fields) | {"id"}
+    unknown = set(params) - valid
+    if unknown:
+        raise HTTPException(
+            status_code=400,
+            detail={"error": f"Unknown filter fields: {sorted(unknown)}",
+                    "field": sorted(unknown)[0]},
+        )
+
+    result = [t for t in db.values()
+              if all(str(t.get(k)) == v for k, v in params.items())]
+
+    return result[offset: offset + limit]
 
 
 @app.get("/api/tours/{id}")

@@ -59,3 +59,12 @@ POST {{base}}/api/tours
 Content-Type: application/json
 
 { "country": "" }
+
+### фильтр
+GET {{base}}/api/tours?country=EG
+
+### фильтр
+GET {{base}}/api/tours?places=1
+
+### инвалидный фильтр
+GET {{base}}/api/tours?foo=bar
