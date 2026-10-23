@@ -14,6 +14,17 @@ Content-Type: application/json
     "places": 3,
     "price": 150000
   }
+### невалидное создание
+POST {{base}}/api/tours
+Content-Type: application/json
+
+{
+    "country": "Франция",
+    "date_in": "2027-04-17",
+    "date_out": "2027-04-13",
+    "places": 4,
+    "price": 150000
+  }
 
 ### Список
 GET {{base}}/api/tours
@@ -21,14 +32,18 @@ GET {{base}}/api/tours
 ### Получить одну запись
 GET {{base}}/api/tours/1
 
+### Получить одну запись невалидно
+GET {{base}}/api/tours/4
+
 ### Изменитьs
-PATCH {{base}}/api/tours1
+PATCH {{base}}/api/tours/1
 Content-Type: application/json
 
-{ "title": "Изменённая запись" }
+{"date_out": "2027-04-21",
+"places": 1}
 
 ### Удалить
-DELETE {{base}}/api/tours1
+DELETE {{base}}/api/tours/1
 
 ### После удаления должен быть 404
 GET {{base}}/api/tours/1
