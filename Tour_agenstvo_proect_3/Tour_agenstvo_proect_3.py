@@ -1,7 +1,16 @@
 from fastapi import FastAPI, HTTPException
-from base import TourCreate
+#from base import TourCreate
 
+from datetime import date
 
+from pydantic import BaseModel, Field
+
+class TourCreate(BaseModel):
+    country: str
+    date_in: date
+    date_out: date
+    places: int = Field(gt=0)
+    price: float = Field(gt=0)
 
 app = FastAPI()
 
@@ -18,7 +27,7 @@ counter = 0
 def create_tour(item: TourCreate):
     global counter
     counter = counter + 1
-    db[counter] = {"id": counter, **TourCreate.model_dump()}
+    db[counter] = {"id": counter, **item.model_dump()}
     return db[counter]
 
 
@@ -30,5 +39,5 @@ def tours_list():
 @app.get("/api/tours/{id}")
 def get_tour(id: int):
     if id not in db:
-        return HTTPException(status_code=404, detail="Tour not found")
+        raise HTTPException(status_code=404, detail="Tour not found")
     return db[id]

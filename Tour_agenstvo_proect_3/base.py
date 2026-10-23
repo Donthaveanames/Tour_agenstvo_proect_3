@@ -11,11 +11,11 @@ class TourCreate(BaseModel):
     places: int = Field(gt=0)
     price: float = Field(gt=0)
 
-    @ModelAfterValidator
-    def check_data(self):
-        if self.date_in > self.date_out:
-            return ValueError("The check‑in date must be earlier than the check‑out date.")
-        return self
+#    @ModelAfterValidator
+#    def check_data(self):
+#        if self.date_in > self.date_out:
+#            raise ValueError("The check‑in date must be earlier than the check‑out date.")
+#        return self
 
 
 
