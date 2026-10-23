@@ -52,10 +52,10 @@ GET {{base}}/api/tours/1
 POST {{base}}/api/tours
 Content-Type: application/json
 
-{ "title":
+{ "country":
 
 ### Пустое обязательное поле, должен быть 400
 POST {{base}}/api/tours
 Content-Type: application/json
 
-{ "title": "" }
+{ "country": "" }

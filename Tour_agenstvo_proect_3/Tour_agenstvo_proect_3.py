@@ -1,6 +1,6 @@
-from email.policy import default
 
 from fastapi import FastAPI, HTTPException, Response, Request
+import time
 #from base import TourCreate
 
 from datetime import date
@@ -37,6 +37,15 @@ def health():
 
 db = {}
 counter = 0
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start = time.perf_counter()
+    response = await call_next(request)
+    elapsed_ms = (time.perf_counter() - start) * 1000
+    print(f"{request.method} {request.url.path} "
+          f"{response.status_code} {elapsed_ms:.1f}ms")
+    return response
 
 def check(id) -> None:
     if id not in db:
