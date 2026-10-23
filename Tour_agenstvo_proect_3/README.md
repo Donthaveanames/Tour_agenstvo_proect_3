@@ -24,7 +24,7 @@ bash
 `py -m uvicorn Tour_agenstvo_proect_3.Tour_agenstvo_proect_3:app --reload`
 
 
-🔌 Эндпоинты
+# 🔌 Эндпоинты
 |Метод | Путь | Назначение | ✅ Успех | ❌ Ошибки|
 | --- | --- | --- | --- | --- |
 |GET | /health | Проверка | работоспособности | 200 | —|
