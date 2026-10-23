@@ -6,20 +6,20 @@
 Фишка | Валидация бизнес-полей (places > 0, price > 0) + кастомный обработчик ошибок валидации с кодом 400
 Стек | Python 3.11, FastAPI, Pydantic v2, Uvicorn
 
-Установка и запуск
+# Установка и запуск
 1. Клонирование / создание виртуального окружения
 bash
-py -m venv venv
-# Linux/macOS
-source venv/bin/activate
-# Windows
-venv\Scripts\activate
+`py -m venv venv`
+Linux/macOS
+`source venv/bin/activate`
+Windows
+`venv\Scripts\activate`
 2. Установка зависимостей
 bash
-py - m pip install -r requirements.txt
+`py - m pip install -r requirements.txt`
 3. Запуск сервера
 bash
-py -m uvicorn Tour_agenstvo_proect_3.Tour_agenstvo_proect_3:app --reload
+`py -m uvicorn Tour_agenstvo_proect_3.Tour_agenstvo_proect_3:app --reload`
 
 
 🔌 Эндпоинты
