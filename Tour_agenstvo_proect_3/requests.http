@@ -90,7 +90,7 @@ Content-Type: application/json
 GET {{base}}/api/tours?country=Франция
 
 ### фильтр
-GET {{base}}/api/tours?places=1
+GET {{base}}/api/tours?places=3
 
 ### инвалидный фильтр
 GET {{base}}/api/tours?foo=bar
