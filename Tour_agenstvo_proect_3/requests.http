@@ -14,6 +14,20 @@ Content-Type: application/json
     "places": 3,
     "price": 150000
   }
+
+
+### Создать
+POST {{base}}/api/tours
+Content-Type: application/json
+
+{
+    "country": "Германия",
+    "date_in": "2027-05-12",
+    "date_out": "2027-05-26",
+    "places": 3,
+    "price": 70000
+  }
+
 ### невалидное создание
 POST {{base}}/api/tours
 Content-Type: application/json
@@ -35,12 +49,24 @@ GET {{base}}/api/tours/1
 ### Получить одну запись невалидно
 GET {{base}}/api/tours/4
 
-### Изменитьs
+### Изменить
 PATCH {{base}}/api/tours/1
 Content-Type: application/json
 
 {"date_out": "2027-04-21",
 "places": 1}
+
+### будущее невалидное изменение
+PATCH {{base}}/api/tours/2
+Content-Type: application/json
+
+{"date_out": "2027-04-21"}
+
+### невалидное изменение
+PATCH {{base}}/api/tours/2
+Content-Type: application/json
+
+{"country": ""}
 
 ### Удалить
 DELETE {{base}}/api/tours/1

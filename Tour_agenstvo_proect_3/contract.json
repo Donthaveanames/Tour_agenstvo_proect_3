@@ -9,18 +9,18 @@
       "country": "Китай",
       "date_in": "2027-04-12",
       "date_out": "2027-04-20",
-      "places": 3,
+      "places": 13,
       "price": 150000
     },
     {
       "country": "Франция",
-      "date_in": "2027-04-17",
-      "date_out": "2027-04-13",
-      "places": 4,
-      "price": 150000
+      "date_in": "2027-04-13",
+      "date_out": "2027-04-15",
+      "places": 20,
+      "price": 40000
     }
   ],
-    "update" : { "places": 2 },
+    "update" : { "places": 12 },
     "required_field" :
     "country",
     "errors": [
