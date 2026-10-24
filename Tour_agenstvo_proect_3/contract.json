@@ -4,47 +4,58 @@
   "id_field": "id",
   "missing_id": "7f3a9c2e-84b1-4d6a-9e5f-1c8d2b7a3e60",
   "list_key": null,
-  "create": {
-    "country": "Китай",
-    "date_in": "2027-04-12",
-    "date_out": "2027-04-20",
-    "places": 3,
-    "price": 150000
-  },
-  "update": { "places": 2 },
-  "required_field": "country",
-  "errors": [
+  "create": [
     {
-      "body": { "country": "" },
-      "field": "country"
+      "country": "Китай",
+      "date_in": "2027-04-12",
+      "date_out": "2027-04-20",
+      "places": 3,
+      "price": 150000
     },
     {
-      "body": { "places": -1 },
-      "field": "places"
-    },
-    {
-      "body": { "price": -1 },
-      "field": "price"
-    },
-    {
-      "body": { "date_in": "12-04-2027" },
-      "field": "date_in"
-    },
-    {
-      "body": { "date_out": "20/04/2027" },
-      "field": "date_out"
-    },
-    {
-      "body": {
-        "date_in": "2027-04-20",
-        "date_out": "2027-04-12"
-      },
-      "field": "date_out"
+      "country": "Франция",
+      "date_in": "2027-04-17",
+      "date_out": "2027-04-13",
+      "places": 4,
+      "price": 150000
     }
   ],
-  "filter": {
-    "param": "country",
-    "value": "Китай",
-    "other": "Франция"
-  }
+    "update" : { "places": 2 },
+    "required_field" :
+    "country",
+    "errors": [
+      {
+        "body": { "country": "" },
+        "field": "country"
+      },
+      {
+        "body": { "places": -1 },
+        "field": "places"
+      },
+      {
+        "body": { "price": -1 },
+        "field": "price"
+      },
+      {
+        "body": { "date_in": "12-04-2027" },
+        "field": "date_in"
+      },
+      {
+        "body": { "date_out": "20/04/2027" },
+        "field": "date_out"
+      },
+      {
+        "body": {
+          "date_in": "2027-04-20",
+          "date_out": "2027-04-12"
+        },
+        "field": "date_out"
+      }
+    ],
+    "filter" :
+    {
+      "param": "country",
+      "value": "Китай",
+      "other": "Франция"
+    }
 }

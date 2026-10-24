@@ -1,17 +1,18 @@
 
 from fastapi import FastAPI, HTTPException, Response, Request
 import time
-#from base import TourCreate
+#from base import TourCreate, TourUpdate
 
 from datetime import date
-
-from pydantic import BaseModel, Field
-from typing import Optional
 
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
+
+###======================================###
+from pydantic import BaseModel, Field
+from typing import Optional
 
 class TourCreate(BaseModel):
     country: str = Field(min_length=1)
@@ -27,6 +28,8 @@ class TourUpdate(BaseModel):
     date_out: Optional[date] = None
     places: Optional[int] = Field(default=None, gt=0)
     price: Optional[float] = Field(default=None, gt=0)
+
+###======================================###
 
 app = FastAPI()
 
@@ -48,9 +51,13 @@ async def log_requests(request: Request, call_next):
           f"{response.status_code} {elapsed_ms:.1f}ms")
     return response
 
+
+
 def check(id) -> None:
     if id not in db:
         raise HTTPException(status_code=404, detail="Tour not found")
+
+
 
 @app.post("/api/tours", status_code=201)
 def create_tour(item: TourCreate):
