@@ -1,8 +1,7 @@
 from datetime import date
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import Optional
-from pydantic.functional_validators import ModelAfterValidator
 
 
 class TourCreate(BaseModel):
@@ -12,11 +11,11 @@ class TourCreate(BaseModel):
     places: int = Field(gt=0)
     price: float = Field(gt=0)
 
-#    @ModelAfterValidator
-#    def check_data(self):
-#        if self.date_in > self.date_out:
-#            raise ValueError("The check‑in date must be earlier than the check‑out date.")
-#        return self
+    @model_validator(mode='after')
+    def check_data(self):
+        if self.date_in > self.date_out:
+            raise ValueError("The check‑in date must be earlier than the check‑out date.")
+        return self
 
 class TourUpdate(BaseModel):
     country: Optional[str] = Field(default=None, min_length=1)

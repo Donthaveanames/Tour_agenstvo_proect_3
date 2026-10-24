@@ -61,7 +61,7 @@ Content-Type: application/json
 { "country": "" }
 
 ### фильтр
-GET {{base}}/api/tours?country=EG
+GET {{base}}/api/tours?country=Франция
 
 ### фильтр
 GET {{base}}/api/tours?places=1

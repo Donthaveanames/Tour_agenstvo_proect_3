@@ -1,7 +1,7 @@
 
 from fastapi import FastAPI, HTTPException, Response, Request
 import time
-#from base import TourCreate, TourUpdate
+#from . import base
 
 from datetime import date
 
@@ -11,7 +11,7 @@ from fastapi.encoders import jsonable_encoder
 
 
 ###======================================###
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import Optional
 
 class TourCreate(BaseModel):
@@ -20,6 +20,11 @@ class TourCreate(BaseModel):
     date_out: date
     places: int = Field(gt=0)
     price: float = Field(gt=0)
+    @model_validator(mode='after')
+    def check_data(self):
+        if self.date_in > self.date_out:
+            raise ValueError("The check‑in date must be earlier than the check‑out date.")
+        return self
 
 
 class TourUpdate(BaseModel):
@@ -29,9 +34,9 @@ class TourUpdate(BaseModel):
     places: Optional[int] = Field(default=None, gt=0)
     price: Optional[float] = Field(default=None, gt=0)
 
-###======================================###
+###======================================###"""
 
-app = FastAPI()
+app = FastAPI(title="Tours")
 
 
 @app.get("/health", status_code=200)
