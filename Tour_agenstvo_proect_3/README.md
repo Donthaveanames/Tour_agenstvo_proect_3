@@ -34,3 +34,25 @@ bash
 |PUT | /api/tours/{id} | Полностью заменить тур | 200 | 400, 404|
 |PATCH | /api/tours/{id} | Частично обновить тур | 200 | 400, 404|
 |DELETE | /api/tours/{id} | Удалить тур | 204 | 404|
+
+
+erDiagram
+    TOUR ||--o{ BOOKING : "has many"
+
+    TOUR {
+        int id PK
+        string country
+        date date_in
+        date date_out
+        int places
+        float price
+    }
+
+    BOOKING {
+        int id PK
+        int tour_id FK
+        string customer_name
+        string customer_phone
+        int places
+        datetime created_at
+    }
