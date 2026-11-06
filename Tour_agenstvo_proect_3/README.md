@@ -56,3 +56,21 @@ bash
         int places
         datetime created_at
     } ||
+
+
+## Индекс под частый запрос
+
+Индекс создаётся миграцией `alembic/versions/xxxx_add_index.py`.
+
+Проверка:
+
+```sql
+EXPLAIN SELECT * FROM tours WHERE country ILIKE '%Китай%';
+```
+
+Вывод:
+
+```
+Bitmap Heap Scan on tours  (cost=...)
+  ->  Bitmap Index Scan on ix_tours_country_trgm  (cost=...)
+```

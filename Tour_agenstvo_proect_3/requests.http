@@ -120,3 +120,19 @@ Content-Type: application/json
   "customer_phone": "+79007654321",
   "places": 10
 }
+
+
+### SQL-инъекция как обычный текст
+POST {{base}}/api/tours
+Content-Type: application/json
+
+{
+    "country": "'); DROP TABLE tours;--",
+    "date_in": "2027-07-01",
+    "date_out": "2027-07-10",
+    "places": 2,
+    "price": 50000
+}
+
+### Таблица на месте — сервис работает
+GET {{base}}/api/toursы
