@@ -54,6 +54,7 @@ def create_tour(item: TourCreate, db: Session = Depends(get_db)):
 @app.get("/api/tours")
 def tours_list(
     request: Request,
+    q: str | None = None,
     country: str | None = None,
     date_in: date | None = None,
     date_out: date | None = None,
@@ -72,6 +73,9 @@ def tours_list(
 
     query = db.query(Tour)
 
+    if q is not None:
+        query = query.filter(Tour.country.ilike(f"%{q}%"))
+
     if country is not None:
         query = query.filter(Tour.country == country)
     if date_in is not None:
@@ -88,7 +92,7 @@ def tours_list(
 
 @app.get("/api/tours/{id}")
 def get_tour(id: int, db: Session = Depends(get_db)):
-    return check_get_tour(db, id)
+    return check_get_tour(dbs, id)
 
 @app.put("/api/tours/{id}")
 def tour_full_update(item: TourCreate, id: int, db: Session = Depends(get_db)):

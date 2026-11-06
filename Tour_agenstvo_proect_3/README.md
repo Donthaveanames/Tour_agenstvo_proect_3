@@ -60,17 +60,48 @@ bash
 
 ## Индекс под частый запрос
 
-Индекс создаётся миграцией `alembic/versions/xxxx_add_index.py`.
+Частый запрос — поиск туров по стране без учёта регистра:
+`GET /api/tours?q=кит` → `SELECT * FROM tours WHERE country ILIKE '%кит%'`.
 
-Проверка:
+Индекс создаётся миграцией `alembic/versions/xxxx_add_trgm_index.py`:
+
+```python
+def upgrade() -> None:
+    op.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+    op.execute(
+        "CREATE INDEX ix_tours_country_trgm "
+        "ON tours USING gin (country gin_trgm_ops)"
+    )
+```
+
+### До индекса
 
 ```sql
 EXPLAIN SELECT * FROM tours WHERE country ILIKE '%Китай%';
 ```
 
-Вывод:
+```
+Seq Scan on tours  (cost=0.00..1.02 rows=1 width=242)
+  Filter: ((country)::text ~~* '%Китай%'::text)
+```
+
+Postgres читает всю таблицу — индекс не используется.
+
+### После индекса
+
+```sql
+SET enable_seqscan = off;  -- на малом объёме планировщик предпочитает Seq Scan
+EXPLAIN SELECT * FROM tours WHERE country ILIKE '%Китай%';
+RESET enable_seqscan;
+```
 
 ```
-Bitmap Heap Scan on tours  (cost=...)
-  ->  Bitmap Index Scan on ix_tours_country_trgm  (cost=...)
+Bitmap Heap Scan on tours  (cost=12.93..16.94 rows=1 width=242)
+  Recheck Cond: ((country)::text ~~* '%Китай%'::text)
+  ->  Bitmap Index Scan on ix_tours_country_trgm  (cost=0.00..12.93 rows=1 width=0)
+        Index Cond: ((country)::text ~~* '%Китай%'::text)
 ```
+
+`Bitmap Index Scan on ix_tours_country_trgm` подтверждает, что Postgres
+использует GIN-индекс для `ILIKE`, а не последовательное сканирование.
+`~~*` — внутренний оператор `ILIKE` (поиск без учёта регистра).

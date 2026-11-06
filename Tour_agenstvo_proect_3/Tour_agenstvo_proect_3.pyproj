@@ -24,6 +24,7 @@
   <ItemGroup>
     <Compile Include="alembic\env.py" />
     <Compile Include="alembic\versions\783ded83589e_add_index_on_tours_country.py" />
+    <Compile Include="alembic\versions\c1bf1290e22c_add_trgm_index_tours_country.py" />
     <Compile Include="alembic\versions\fcfbaaaec337_initial.py" />
     <Compile Include="base.py" />
     <Compile Include="database.py" />
