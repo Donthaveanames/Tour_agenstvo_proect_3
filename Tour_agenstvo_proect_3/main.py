@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException, Request, Depends
 import time
 
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from datetime import date
 
@@ -10,9 +11,9 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
-from .database import engine, Base, SessionLocal, get_db
-from .models import Tour, Booking
-from .base import TourCreate, TourUpdate, TourRead, BookingCreate, BookingRead, BookingUpdate
+from database import engine, Base, SessionLocal, get_db
+from models import Tour, Booking
+from base import TourCreate, TourUpdate, TourRead, BookingCreate, BookingRead, BookingUpdate
 
 app = FastAPI(title="Tours", version="2.0.0",)
 
@@ -131,7 +132,11 @@ def delete_tour(id: int, db: Session = Depends(get_db)) -> None:
 @app.post("/api/tours/{id}/bookings", status_code=201, response_model=BookingRead)
 def booking_create(id: int, item: BookingCreate, db: Session = Depends(get_db)):
     tour = check_get_tour(db, id)
-    booked = sum(b.places for b in tour.bookings)
+    booked = (
+        db.query(func.coalesce(func.sum(Booking.places), 0))
+        .filter(Booking.tour_id == id)
+        .scalar()
+    )
     if booked + item.places > tour.places:
         raise HTTPException(
             status_code=409,

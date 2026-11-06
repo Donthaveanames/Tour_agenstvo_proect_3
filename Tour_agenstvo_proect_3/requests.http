@@ -72,7 +72,7 @@ Content-Type: application/json
 {"country": ""}
 
 ### Удалить
-DELETE {{base}}/api/tours/1
+DELETE {{base}}/api/tours/2
 
 ### После удаления должен быть 404
 GET {{base}}/api/tours/1
@@ -97,3 +97,26 @@ GET {{base}}/api/tours?places=3
 
 ### инвалидный фильтр
 GET {{base}}/api/tours?foo=bar
+
+### Забронировать 2 места
+POST {{base}}/api/tours/1/bookings
+Content-Type: application/json
+
+{
+  "customer_name": "Иван Иванов",
+  "customer_phone": "+79001234567",
+  "places": 2
+}
+
+### Список броней тура
+GET {{base}}/api/tours/4/bookings
+
+### Попытка забронировать больше, чем есть
+POST {{base}}/api/tours/5/bookings
+Content-Type: application/json
+
+{
+  "customer_name": "Пётр Петров",
+  "customer_phone": "+79007654321",
+  "places": 10
+}

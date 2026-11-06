@@ -15,6 +15,10 @@ class Tour(Base):
     places: Mapped[int] = mapped_column(Integer, nullable=False)
     price: Mapped[float] = mapped_column(Float, nullable=False)
 
+    bookings: Mapped[list["Booking"]] = relationship(
+        back_populates="tour", cascade="all, delete-orphan"
+    )
+
 
 class Booking(Base):
     __tablename__ = "bookings"

@@ -29,6 +29,7 @@
     <Compile Include="database.py" />
     <Compile Include="main.py" />
     <Compile Include="models.py" />
+    <Compile Include="seed.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".env" />
