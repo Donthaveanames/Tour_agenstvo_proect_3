@@ -36,7 +36,7 @@ bash
 |DELETE | /api/tours/{id} | Удалить тур | 204 | 404|
 
 
-erDiagram
+
     TOUR ||--o{ BOOKING : "has many"
 
     TOUR {
