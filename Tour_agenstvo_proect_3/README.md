@@ -55,4 +55,4 @@ bash
         string customer_phone
         int places
         datetime created_at
-    }
+    } ||
