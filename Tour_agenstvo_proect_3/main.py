@@ -134,7 +134,7 @@ def booking_create(id: int, item: BookingCreate, db: Session = Depends(get_db)):
     booked = sum(b.places for b in tour.bookings)
     if booked + item.places > tour.places:
         raise HTTPException(
-            status_code=400,
+            status_code=409,
             detail={"error": "Not enough places", "field": "places"},
         )
 
