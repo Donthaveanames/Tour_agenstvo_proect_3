@@ -1,6 +1,6 @@
-from datetime import date
-from sqlalchemy import String, Date, Integer, Float
-from sqlalchemy.orm import Mapped, mapped_column
+from datetime import date, datetime
+from sqlalchemy import String, Date, Integer, Float, DateTime, ForeignKey, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database import Base
 
@@ -14,3 +14,17 @@ class Tour(Base):
     date_out: Mapped[date] = mapped_column(Date, nullable=False)
     places: Mapped[int] = mapped_column(Integer, nullable=False)
     price: Mapped[float] = mapped_column(Float, nullable=False)
+
+
+class Booking(Base):
+    __tablename__ = "bookings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    tour_id: Mapped[int] = mapped_column(ForeignKey("tours.id"), nullable=False)
+    customer_name: Mapped[str] = mapped_column(nullable=False)
+    customer_phone: Mapped[str] = mapped_column(nullable=False)
+    places: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    tour: Mapped["Tour"] = relationship(back_populates="bookings")
