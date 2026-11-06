@@ -22,12 +22,21 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="alembic\env.py" />
+    <Compile Include="alembic\versions\783ded83589e_add_index_on_tours_country.py" />
+    <Compile Include="alembic\versions\fcfbaaaec337_initial.py" />
     <Compile Include="base.py" />
     <Compile Include="database.py" />
     <Compile Include="main.py" />
+    <Compile Include="models.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".env" />
+    <Content Include=".env.example" />
+    <Content Include=".gitignore" />
+    <Content Include="alembic.ini" />
+    <Content Include="alembic\README" />
+    <Content Include="alembic\script.py.mako" />
     <Content Include="contract.json" />
     <Content Include="README.md" />
     <Content Include="requests.http" />
@@ -43,6 +52,10 @@
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X64</Architecture>
     </Interpreter>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="alembic\" />
+    <Folder Include="alembic\versions\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

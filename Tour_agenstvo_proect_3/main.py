@@ -1,7 +1,8 @@
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Depends
 import time
-from .base import TourCreate, TourUpdate
+
+from sqlalchemy.orm import Session
 
 from datetime import date
 
@@ -9,18 +10,17 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
-#from .database import engine, Base, SessionLocal
+from .database import engine, Base, SessionLocal, get_db
+from .models import Tour
+from .base import TourCreate, TourUpdate
 
 app = FastAPI(title="Tours", version="2.0.0",)
 
-#Base.metadata.create_all(bind=engine)
 
 @app.get("/health", status_code=200)
 def health():
     return {"status": "ok"}
 
-db = {}
-counter = 0
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -33,27 +33,35 @@ async def log_requests(request: Request, call_next):
 
 
 
-def check(id) -> None:
-    if id not in db:
+def check_get_tour(db: Session, tour_id: int) -> Tour:
+    tour = db.get(Tour, tour_id)
+    if tour is None:
         raise HTTPException(status_code=404, detail="Tour not found")
+    return tour
 
 
 
 @app.post("/api/tours", status_code=201)
-def create_tour(item: TourCreate):
-    global counter
-    counter = counter + 1
-    db[counter] = {"id": counter, **item.model_dump()}
-    return db[counter]
+def create_tour(item: TourCreate, db: Session = Depends(get_db)):
+    tour = Tour(**item.model_dump())
+    db.add(tour)
+    db.commit()
+    db.refresh(tour)
+    return tour
 
 
 @app.get("/api/tours")
-def tours_list(request: Request):
-
-    params = dict(request.query_params)
-
-    valid = set(TourCreate.model_fields) | {"id"}
-    unknown = set(params) - valid
+def tours_list(
+    request: Request,
+    country: str | None = None,
+    date_in: date | None = None,
+    date_out: date | None = None,
+    places: int | None = None,
+    price: float | None = None,
+    db: Session = Depends(get_db),
+):
+    valid = {"country", "date_in", "date_out", "places", "price"}
+    unknown = set(request.query_params) - valid
     if unknown:
         raise HTTPException(
             status_code=400,
@@ -61,33 +69,61 @@ def tours_list(request: Request):
                     "field": sorted(unknown)[0]},
         )
 
-    result = [t for t in db.values()
-              if all(str(t.get(k)) == v for k, v in params.items())]
+    query = db.query(Tour)
 
-    return result
+    if country is not None:
+        query = query.filter(Tour.country == country)
+    if date_in is not None:
+        query = query.filter(Tour.date_in == date_in)
+    if date_out is not None:
+        query = query.filter(Tour.date_out == date_out)
+    if places is not None:
+        query = query.filter(Tour.places == places)
+    if price is not None:
+        query = query.filter(Tour.price == price)
+
+    return  query.all()
 
 
 @app.get("/api/tours/{id}")
-def get_tour(id: int):
-    check(id)
-    return db[id]
+def get_tour(id: int, db: Session = Depends(get_db)):
+    return check_get_tour(db, id)
 
 @app.put("/api/tours/{id}")
-def tour_full_update(item: TourCreate, id: int):
-    check(id)
-    db[id] = {"id": id, **item.model_dump()}
-    return db[id]
+def tour_full_update(item: TourCreate, id: int, db: Session = Depends(get_db)):
+    tour = check_get_tour(db, id)
+
+    for field, value in item.model_dump().items():
+        setattr(tour, field, value)
+    
+    db.commit()
+    db.refresh(tour)
+    return tour
 
 @app.patch("/api/tours/{id}")
-def tour_update(id: int, item: TourUpdate):
-    check(id)
-    db[id].update(item.model_dump(exclude_unset=True))
-    return db[id]
+def tour_update(id: int, item: TourUpdate, db: Session = Depends(get_db)):
+    tour = check_get_tour(db, id)
+    
+    for field, value in item.model_dump(exclude_unset=True).items():
+        setattr(tour, field, value)
+
+    if tour.date_in > tour.date_out:
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail={"error": "date_in must be earlier than date_out", "field": "date_in"},
+        )
+
+    db.commit()
+    db.refresh(tour)
+    return tour
+
 
 @app.delete("/api/tours/{id}", status_code=204)
-def delete_tour(id: int):
-    check(id)
-    del db[id]
+def delete_tour(id: int, db: Session = Depends(get_db)) -> None:
+    tour = check_get_tour(db, id)
+    db.delete(tour)
+    db.commit()
     
 
 @app.exception_handler(RequestValidationError)

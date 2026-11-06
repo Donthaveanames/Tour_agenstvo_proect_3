@@ -3,6 +3,9 @@
 ### Сервис жив?
 GET {{base}}/health
 
+### Список для проверки сохранности
+GET {{base}}/api/tours
+
 ### Создать
 POST {{base}}/api/tours
 Content-Type: application/json
@@ -56,7 +59,7 @@ Content-Type: application/json
 {"date_out": "2027-04-21",
 "places": 1}
 
-### будущее невалидное изменение
+### невалидное изменение
 PATCH {{base}}/api/tours/2
 Content-Type: application/json
 
