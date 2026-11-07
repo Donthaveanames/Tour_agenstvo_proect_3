@@ -37,6 +37,8 @@ bash
 
 
 
+```mermaid
+erDiagram
     TOUR ||--o{ BOOKING : "has many"
 
     TOUR {
@@ -55,7 +57,8 @@ bash
         string customer_phone
         int places
         datetime created_at
-    } ||
+    }
+```
 
 
 ## Индекс под частый запрос

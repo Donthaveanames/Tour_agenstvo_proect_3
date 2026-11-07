@@ -47,13 +47,13 @@ Content-Type: application/json
 GET {{base}}/api/tours
 
 ### Получить одну запись
-GET {{base}}/api/tours/1
+GET {{base}}/api/tours/5
 
 ### Получить одну запись невалидно
-GET {{base}}/api/tours/4
+GET {{base}}/api/tours/888
 
 ### Изменить
-PATCH {{base}}/api/tours/1
+PATCH {{base}}/api/tours/2
 Content-Type: application/json
 
 {"date_out": "2027-04-21",
@@ -99,7 +99,7 @@ GET {{base}}/api/tours?places=3
 GET {{base}}/api/tours?foo=bar
 
 ### Забронировать 2 места
-POST {{base}}/api/tours/1/bookings
+POST {{base}}/api/tours/6/bookings
 Content-Type: application/json
 
 {
@@ -139,10 +139,10 @@ GET {{base}}/api/toursы
 
 
 ### Поиск без учёта регистра (нижний регистр)
-GET {{base}}/api/tours?q=франция
+GET {{base}}/api/tours?франция
 
 ### Поиск без учёта регистра (верхний регистр)
-GET {{base}}/api/tours?q=КИТАЙ
+GET {{base}}/api/tours?country=КИТАЙ
 
 ### Поиск без учёта регистра (смешанный)
-GET {{base}}/api/tours?q=гЕрМаНиЯ
+GET {{base}}/api/tours?country=гЕрМаНиЯ

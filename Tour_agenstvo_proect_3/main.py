@@ -54,13 +54,13 @@ def create_tour(item: TourCreate, db: Session = Depends(get_db)):
 @app.get("/api/tours")
 def tours_list(
     request: Request,
-    q: str | None = None,
     country: str | None = None,
     date_in: date | None = None,
     date_out: date | None = None,
     places: int | None = None,
     price: float | None = None,
     db: Session = Depends(get_db),
+    q: str | None = None,
 ):
     valid = {"country", "date_in", "date_out", "places", "price"}
     unknown = set(request.query_params) - valid
@@ -92,7 +92,7 @@ def tours_list(
 
 @app.get("/api/tours/{id}")
 def get_tour(id: int, db: Session = Depends(get_db)):
-    return check_get_tour(dbs, id)
+    return check_get_tour(db, id)
 
 @app.put("/api/tours/{id}")
 def tour_full_update(item: TourCreate, id: int, db: Session = Depends(get_db)):
