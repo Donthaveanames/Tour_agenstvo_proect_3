@@ -139,10 +139,10 @@ GET {{base}}/api/toursы
 
 
 ### Поиск без учёта регистра (нижний регистр)
-GET {{base}}/api/tours?франция
+GET {{base}}/api/tours?q=франция
 
 ### Поиск без учёта регистра (верхний регистр)
-GET {{base}}/api/tours?country=КИТАЙ
+GET {{base}}/api/tours?q=КИТАЙ
 
 ### Поиск без учёта регистра (смешанный)
-GET {{base}}/api/tours?country=гЕрМаНиЯ
+GET {{base}}/api/tours?q=гЕрМаНиЯ
